@@ -56,7 +56,7 @@ The host machine only needs Docker Engine installed. No Python, Node.js, or othe
 ### 1. Clone & Configure
 
 ```bash
-git clone <repo-url>
+git clone --recurse-submodules git@github.com:j0x7c4/kimi-agent.git
 cd kimi-agent
 
 cp .env.example .env
