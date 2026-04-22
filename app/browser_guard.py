@@ -428,7 +428,7 @@ class BrowserCDPGuard:
                 f"{self.cdp_url}/json/new", json={"url": url}, timeout=5
             )
             if response.status_code != 200:
-                print(response.text)
+                logger.error(response.text)
                 raise Exception(f"打开新标签页失败，状态码: {response.status_code}")
 
             # 获取新标签页信息
@@ -695,7 +695,7 @@ class BrowserCDPGuard:
 
 
 def wait_for_display(display=None, timeout=60):
-    """等待 X11 显示服务器准备就绪"""
+    """等待 X11 显示服务器准备就绪（使用 xdotool，无需 Xlib/.Xauthority）"""
     if display is None:
         display = os.getenv("DISPLAY", ":99")
 
@@ -704,16 +704,20 @@ def wait_for_display(display=None, timeout=60):
     start_time = time.time()
     while time.time() - start_time < timeout:
         try:
-            # 尝试连接到 X11 显示服务器
-            from Xlib import display as xlib_display
-
-            d = xlib_display.Display(display)
-            d.close()
-            logger.info(f"显示服务器 {display} 已准备就绪")
-            return True
+            import subprocess
+            result = subprocess.run(
+                ["xdotool", "getdisplaygeometry"],
+                env={**os.environ, "DISPLAY": display},
+                capture_output=True,
+                text=True,
+                timeout=1,
+            )
+            if result.returncode == 0:
+                logger.info(f"显示服务器 {display} 已准备就绪")
+                return True
         except Exception as e:
             logger.debug(f"显示服务器未就绪: {e}")
-            time.sleep(0.5)
+        time.sleep(0.5)
 
     logger.error(f"超时：显示服务器 {display} 在 {timeout} 秒内未准备就绪")
     return False

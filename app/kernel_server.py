@@ -300,4 +300,5 @@ if __name__ == "__main__":
         port=args.port,
         reload=args.reload,
         log_level=args.log_level,
+        access_log=False,
     )
