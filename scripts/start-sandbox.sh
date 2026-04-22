@@ -52,8 +52,5 @@ echo ""
 # 等待必要的服务就绪
 sleep 2
 
-# 启动 Worker (监听 WebSocket，由 Gateway 反向代理)
-exec python -m kimi_cli.web.runner.worker \
-    --session-id "${KIMI_SESSION_ID:-default}" \
-    --host 0.0.0.0 \
-    --port "${WORKER_PORT:-8080}"
+# 启动 Worker (JSON-RPC over stdin/stdout，由 Gateway 管道代理)
+exec python -m kimi_cli.web.runner.worker "${KIMI_SESSION_ID:-default}"
