@@ -58,6 +58,9 @@ services:
 
       # Custom Skills
       - CUSTOM_SKILLS_HOST_PATH=${CUSTOM_SKILLS_HOST_PATH:-}
+
+      # HuggingFace Cache
+      - HF_CACHE_HOST_PATH=${HF_CACHE_HOST_PATH:-}
     networks:
       - kimi-agent-network
     healthcheck:
