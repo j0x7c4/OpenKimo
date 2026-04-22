@@ -55,6 +55,9 @@ services:
       # Container Mode
       - KIMI_USE_CONTAINERS=true
       - KIMI_SHARE_DIR=/data/sessions
+
+      # Custom Skills
+      - CUSTOM_SKILLS_HOST_PATH=${CUSTOM_SKILLS_HOST_PATH:-}
     networks:
       - kimi-agent-network
     healthcheck:
