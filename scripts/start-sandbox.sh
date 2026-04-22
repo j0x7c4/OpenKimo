@@ -24,7 +24,7 @@ if [ "$ENABLE_JUPYTER" != "false" ]; then
     python /app/kernel_server.py \
         --host 0.0.0.0 \
         --port "${JUPYTER_KERNEL_PORT:-8888}" \
-        --log-level info &
+        --log-level info > /app/logs/kernel_server.log 2>&1 &
     KERNEL_PID=$!
     echo "      Kernel Server PID: $KERNEL_PID"
 fi
@@ -34,9 +34,9 @@ fi
 # -----------------------------------------------------------
 if [ "$ENABLE_BROWSER" != "false" ]; then
     echo "[3/4] Starting Browser Guard..."
-    python /app/browser_guard.py --wait-display --timeout 30 || true
+    python /app/browser_guard.py --wait-display --timeout 30 > /app/logs/browser_guard_wait.log 2>&1 || true
     # BrowserGuard 在 monitor 模式下持续运行
-    python /app/browser_guard.py --monitor &
+    python /app/browser_guard.py --monitor > /app/logs/browser_guard.log 2>&1 &
     BROWSER_PID=$!
     echo "      Browser Guard PID: $BROWSER_PID"
 fi
