@@ -28,6 +28,7 @@ RUN apt-get update \
         wget \
         ca-certificates \
         xdotool \
+        ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
 # -----------------------------------------------------------
@@ -55,7 +56,8 @@ RUN pip install --no-cache-dir \
     psutil \
     pillow \
     playwright \
-    brotli
+    brotli \
+    opencv-python-headless
 
 # 安装 Playwright 浏览器驱动
 RUN playwright install chromium \
