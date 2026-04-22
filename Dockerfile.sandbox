@@ -54,7 +54,8 @@ RUN pip install --no-cache-dir \
     psutil \
     pillow \
     playwright \
-    brotli
+    brotli \
+    pyautogui
 
 # 安装 Playwright 浏览器驱动
 RUN playwright install chromium \
