@@ -59,6 +59,13 @@ RUN pip install --no-cache-dir \
     brotli \
     opencv-python-headless
 
+# 安装 ML/AI 依赖 (torch, transformers 等)
+RUN pip install --no-cache-dir \
+    torch \
+    torchvision \
+    transformers \
+    accelerate
+
 # 安装 Playwright 浏览器驱动
 RUN playwright install chromium \
     && playwright install-deps chromium
