@@ -36,18 +36,14 @@ RUN apt-get update \
 # -----------------------------------------------------------
 WORKDIR /deps
 
-# Copy package files and install dependencies
-COPY kimi-cli/pyproject.toml kimi-cli/uv.lock ./
-COPY kimi-cli/packages/ ./packages/
-COPY kimi-cli/sdks/ ./sdks/
+# ML/AI 依赖体积大且很少变化，放在最前面以最大化层缓存命中率
+RUN pip install --no-cache-dir \
+    torch \
+    torchvision \
+    transformers \
+    accelerate
 
-RUN pip install --no-cache-dir uv \
-    && uv pip install --system -r pyproject.toml \
-    && uv pip install --system --no-deps \
-        ./packages/kosong \
-        ./packages/kaos
-
-# 安装 Jupyter kernel 和 matplotlib 等科学计算包
+# 安装 Jupyter kernel 和科学计算包（同样较少变化）
 RUN pip install --no-cache-dir \
     ipykernel \
     jupyter-client \
@@ -59,12 +55,16 @@ RUN pip install --no-cache-dir \
     brotli \
     opencv-python-headless
 
-# 安装 ML/AI 依赖 (torch, transformers 等)
-RUN pip install --no-cache-dir \
-    torch \
-    torchvision \
-    transformers \
-    accelerate
+# Copy package files and install kimi-cli dependencies
+COPY kimi-cli/pyproject.toml kimi-cli/uv.lock ./
+COPY kimi-cli/packages/ ./packages/
+COPY kimi-cli/sdks/ ./sdks/
+
+RUN pip install --no-cache-dir uv \
+    && uv pip install --system -r pyproject.toml \
+    && uv pip install --system --no-deps \
+        ./packages/kosong \
+        ./packages/kaos
 
 # 安装 Playwright 浏览器驱动
 RUN playwright install chromium \
@@ -82,10 +82,10 @@ COPY app/ /app/
 COPY kimi-cli/src/ /usr/local/lib/python3.12/site-packages/
 
 # Register kimi-cli package metadata so importlib.metadata works
-RUN mkdir -p /usr/local/lib/python3.12/site-packages/kimi_cli-1.37.0.dist-info \
-    && printf 'Name: kimi-cli\nVersion: 1.37.0\n' > /usr/local/lib/python3.12/site-packages/kimi_cli-1.37.0.dist-info/METADATA \
-    && touch /usr/local/lib/python3.12/site-packages/kimi_cli-1.37.0.dist-info/INSTALLER \
-    && touch /usr/local/lib/python3.12/site-packages/kimi_cli-1.37.0.dist-info/RECORD
+RUN mkdir -p /usr/local/lib/python3.12/site-packages/kimi_cli-1.39.0.dist-info \
+    && printf 'Name: kimi-cli\nVersion: 1.37.0\n' > /usr/local/lib/python3.12/site-packages/kimi_cli-1.39.0.dist-info/METADATA \
+    && touch /usr/local/lib/python3.12/site-packages/kimi_cli-1.39.0.dist-info/INSTALLER \
+    && touch /usr/local/lib/python3.12/site-packages/kimi_cli-1.39.0.dist-info/RECORD
 
 # 创建必要的目录
 RUN mkdir -p /app/data/chrome_data /app/logs /tmp/chromium_user_data

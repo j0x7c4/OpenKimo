@@ -70,10 +70,10 @@ COPY kimi-cli/packages/ /app/packages/
 COPY --from=web-builder /build/dist /app/src/kimi_cli/web/static
 
 # Register kimi-cli package metadata so importlib.metadata works
-RUN mkdir -p /usr/local/lib/python3.12/site-packages/kimi_cli-1.37.0.dist-info \
-    && printf 'Name: kimi-cli\nVersion: 1.37.0\n' > /usr/local/lib/python3.12/site-packages/kimi_cli-1.37.0.dist-info/METADATA \
-    && touch /usr/local/lib/python3.12/site-packages/kimi_cli-1.37.0.dist-info/INSTALLER \
-    && touch /usr/local/lib/python3.12/site-packages/kimi_cli-1.37.0.dist-info/RECORD
+RUN mkdir -p /usr/local/lib/python3.12/site-packages/kimi_cli-1.39.0.dist-info \
+    && printf 'Name: kimi-cli\nVersion: 1.37.0\n' > /usr/local/lib/python3.12/site-packages/kimi_cli-1.39.0.dist-info/METADATA \
+    && touch /usr/local/lib/python3.12/site-packages/kimi_cli-1.39.0.dist-info/INSTALLER \
+    && touch /usr/local/lib/python3.12/site-packages/kimi_cli-1.39.0.dist-info/RECORD
 
 # Create sessions data directory
 RUN mkdir -p /data/sessions
