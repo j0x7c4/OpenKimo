@@ -13,7 +13,7 @@ WORKDIR /build
 
 # Install dependencies
 COPY kimi-cli/web/package.json kimi-cli/web/package-lock.json ./
-RUN npm ci
+RUN npm ci --ignore-scripts && npm rebuild
 
 # Copy source and build
 COPY kimi-cli/web/ ./
