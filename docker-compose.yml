@@ -63,6 +63,9 @@ services:
       # the same directory into each sandbox container via the Docker socket.
       - KIMI_SESSION_DATA_DIR=${KIMI_SESSION_DATA_DIR:-./data/sessions}
 
+      # Agent Output Directory (inside sandbox containers)
+      - KIMI_OUTPUT_DIR=${KIMI_OUTPUT_DIR:-/app/output}
+
       # Custom Skills
       - CUSTOM_SKILLS_HOST_PATH=${CUSTOM_SKILLS_HOST_PATH:-}
 
