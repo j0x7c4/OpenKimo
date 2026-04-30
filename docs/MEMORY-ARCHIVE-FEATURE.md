@@ -235,6 +235,18 @@ StreamingResponse(
 
 红点 tooltip 现在直接显示原始错误字符串。可加分类：模型不可用 / 上下文为空 / 写文件失败 / 超时，配合更友好的中文提示和 retry 按钮。
 
+### 5.8 跨工作目录的记忆注入过滤
+
+**现状**：`cross_session_memory.py` 把当前用户的 `recent.jsonl` 全量注入新会话，不区分 `work_dir`。本地 CLI（如 `/Users/jie/.openkimo`）和容器（`/app`）共享一份用户级 `recent.jsonl`，于是容器会话的 system prompt 里会出现"我们之前在 /Users/jie/.openkimo 项目里讨论过…"这类与当下 work_dir 无关的提示。
+
+**可选改造**：
+
+- 在 `read_recent_summaries()` 之后按 `s.work_dir == soul.runtime.work_dir`（或宽松匹配 basename）过滤，只注入同目录的摘要。
+- 或者保留全量但让 `_render()` 在每条摘要前加 `(work_dir: ...)` 前缀，让 LLM 自己判断相关性。
+- 进一步：在 web UI 的 Memory 面板按 work_dir 分组展示，让用户能直观看到本机 / 容器 / 不同项目的记忆。
+
+**为什么不立刻做**：当前还没影响功能（载入不会失败），只是相关性问题；先收集一些实际容器使用场景下的体感再决定过滤策略。
+
 ---
 
 ## 6. 关键文件索引
